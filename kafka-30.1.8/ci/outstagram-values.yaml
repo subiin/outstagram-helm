@@ -1,0 +1,10 @@
+controller:
+  replicaCount: 3
+  persistence:
+    enabled: false
+broker:
+  persistence:
+    enabled: false
+sasl:
+  client:
+    passwords: kafkakafka123!
