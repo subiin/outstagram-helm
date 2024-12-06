@@ -1,0 +1,14 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: configMap
+  namespace: argocd
+spec:
+  destination:
+    name: arn:aws:eks:ap-northeast-2:975050179689:cluster/outstagram-dev-cluster
+    namespace: sns
+  project: default
+  source:
+    path: configmap
+    repoURL: https://github.com/subiin/outstagram-helm.git
+    targetRevision: HEAD
