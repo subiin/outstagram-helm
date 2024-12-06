@@ -1,6 +1,6 @@
 appName: user
 replicas: 1
-imageTag: 0.0.1
+imageTag: u_0.2.2
 profile: dev
 envs: []
 configs:
