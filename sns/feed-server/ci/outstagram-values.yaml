@@ -1,0 +1,39 @@
+appName: feed
+replicas: 2
+imageTag: 0.0.1
+profile: dev
+envs:
+  - name: USER_SERVICE
+    value: http://user-service.sns.svc.cluster.local:8080
+configs:
+- mysql
+- kafka
+resources:
+  memory:
+    requests: "512Mi"
+    limits: "1Gi"
+  cpu:
+    requests: "500m"
+    limits: "1000m"
+probe:
+  readiness:
+    path: /healthcheck/ready
+    port: 8080
+    initialDelaySeconds: 30
+    periodSeconds: 1
+    successThreshold: 1
+    failureThreshold: 3
+  liveness:
+    path: /healthcheck/live
+    port: 8080
+    initialDelaySeconds: 30
+    periodSeconds: 1
+    failureThreshold: 7
+persistence:
+  enabled: false
+ingress:
+  enabled: true
+  hostname: outstagram.shop
+  path: /api/feeds
+  pathType: Prefix
+  port: 8080

@@ -1,0 +1,38 @@
+appName: image
+replicas: 1
+imageTag: 0.0.1
+profile: dev
+envs:
+  - name: IMAGE_PATH
+    value: images
+configs: []
+resources:
+  memory:
+    requests: "512Mi"
+    limits: "1Gi"
+  cpu:
+    requests: "500m"
+    limits: "700m"
+probe:
+  readiness:
+    path: /healthcheck/ready
+    port: 8080
+    initialDelaySeconds: 30
+    periodSeconds: 1
+    successThreshold: 1
+    failureThreshold: 3
+  liveness:
+    path: /healthcheck/live
+    port: 8080
+    initialDelaySeconds: 30
+    periodSeconds: 1
+    failureThreshold: 7
+persistence:
+  enabled: true
+  mountPath: /images
+ingress:
+  enabled: true
+  hostname: outstagram.shop
+  path: /api/images
+  pathType: Prefix
+  port: 8080
