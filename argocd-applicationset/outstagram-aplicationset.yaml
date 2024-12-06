@@ -1,0 +1,27 @@
+apiVersion: argoproj.io/v1alpha1
+kind: ApplicationSet
+metadata:
+  name: outstagram-applicationset
+  namespace: argocd
+spec:
+  generators:
+  - list:
+      elements:
+      - name: feed-server
+        namespace: sns
+  template:
+    metadata:
+      name: '{{ name }}'
+    spec:
+      project: default
+      source:
+        repoURL: https://github.com/subiin/outstagram-helm.git
+        targetRevision: HEAD
+        path: 'sns/{{ name }}'
+        helm:
+          releaseName: '{{ name }}'
+          valueFiles:
+          - ci/outstagram-values.yaml
+      destination:
+        name: arn:aws:eks:ap-northeast-2:975050179689:cluster/outstagram-dev-cluster
+        namespace: '{{ namespace }}'
