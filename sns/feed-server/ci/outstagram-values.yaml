@@ -1,6 +1,6 @@
 appName: feed
 replicas: 2
-imageTag: 0.0.1
+imageTag: f_0.2.11
 profile: dev
 envs:
   - name: USER_SERVICE
