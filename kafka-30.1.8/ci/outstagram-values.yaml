@@ -7,4 +7,4 @@ broker:
     enabled: false
 sasl:
   client:
-    passwords: kafkakafka123!
+    passwords: 
