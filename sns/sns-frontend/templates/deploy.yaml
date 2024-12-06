@@ -22,7 +22,7 @@ spec:
       {{- end }}
       containers:
         - name: {{ .Values.appName }}-container
-          image: 975050179689.dkr.ecr.ap-northeast-2.amazonaws.com/outstagram-{{ .Values.profile }}-{{ .Values.appName }}-server:{{ .Values.imageTag }}
+          image: 975050179689.dkr.ecr.ap-northeast-2.amazonaws.com/outstagram-{{ .Values.profile }}-{{ .Values.appName }}:{{ .Values.imageTag }}
           {{- if .Values.persistence.enabled }}
           volumeMounts:
             - name: {{ .Values.appName }}-volume
