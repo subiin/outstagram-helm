@@ -1,0 +1,18 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: image-server
+  namespace: argocd
+spec:
+  destination:
+    name: arn:aws:eks:ap-northeast-2:975050179689:cluster/outstagram-dev-cluster
+    namespace: sns
+  project: default
+  source:
+    helm:
+      releaseName: image-server
+      valueFiles:
+      - ci/outstagram-values.yaml
+    path: sns/image-server
+    repoURL: https://github.com/subiin/outstagram-helm.git
+    targetRevision: HEAD
