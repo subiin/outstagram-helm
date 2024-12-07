@@ -32,6 +32,7 @@ persistence:
 ingress:
   enabled: true
   hostname: outstagram.shop
-  path: /api/timeline
-  pathType: Prefix
   port: 8080
+  paths:
+    - path: /api/timeline
+      pathType: Prefix

@@ -17,6 +17,7 @@ persistence:
 ingress:
   enabled: true
   hostname: outstagram.shop
-  path: /
-  pathType: Prefix
   port: 3000
+  paths:
+    - path: /
+      pathType: Prefix

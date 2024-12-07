@@ -33,6 +33,9 @@ persistence:
 ingress:
   enabled: true
   hostname: outstagram.shop
-  path: /api/follows
-  pathType: Prefix
   port: 8080
+  paths:
+    - path: /api/users
+      pathType: Prefix
+    - path: /api/follows
+      pathType: Prefix
