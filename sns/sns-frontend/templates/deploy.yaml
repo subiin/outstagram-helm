@@ -80,7 +80,7 @@ spec:
       {{- if .Values.podAntiAffinity.enabled }}
       affinity:
         podAntiAffinity:
-          requiredDuringSchedulingIgnoredDuringExecution:
+          preferredDuringSchedulingIgnoredDuringExecution:
           - labelSelector:
               matchExpressions:
               - key: app
