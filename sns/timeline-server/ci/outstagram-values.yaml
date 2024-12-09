@@ -36,3 +36,5 @@ ingress:
   paths:
     - path: /api/timeline
       pathType: Prefix
+podAntiAffinity:
+  enabled: true

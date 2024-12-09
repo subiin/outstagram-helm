@@ -37,3 +37,5 @@ ingress:
   paths:
     - path: /api/images
       pathType: Prefix
+podAntiAffinity:
+  enabled: true

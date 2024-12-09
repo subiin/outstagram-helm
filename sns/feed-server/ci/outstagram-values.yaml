@@ -38,3 +38,5 @@ ingress:
   paths:
     - path: /api/feeds
       pathType: Prefix
+podAntiAffinity:
+  enabled: true

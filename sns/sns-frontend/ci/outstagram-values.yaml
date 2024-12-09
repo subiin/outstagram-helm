@@ -21,3 +21,5 @@ ingress:
   paths:
     - path: /
       pathType: Prefix
+podAntiAffinity:
+  enabled: true

@@ -77,3 +77,15 @@ spec:
             failureThreshold: {{ .failureThreshold }}
           {{- end }}
           {{- end }}
+      {{- if .Values.podAntiAffinity.enabled }}
+      affinity:
+        podAntiAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+          - labelSelector:
+              matchExpressions:
+              - key: app
+                operator: In
+                values:
+                - {{ .Values.appName }}-server
+            topologyKey: kubernetes.io/hostname
+      {{- end }}

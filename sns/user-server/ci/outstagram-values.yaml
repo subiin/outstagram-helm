@@ -39,3 +39,5 @@ ingress:
       pathType: Prefix
     - path: /api/follows
       pathType: Prefix
+podAntiAffinity:
+  enabled: true
