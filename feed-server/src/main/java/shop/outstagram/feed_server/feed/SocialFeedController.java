@@ -17,8 +17,17 @@ public class SocialFeedController {
     }
 
     @GetMapping
-    public List<SocialFeed> getAllFeeds() {
-        return feedService.getAllFeeds();
+    public List<FeedInfo> getAllFeeds() {
+        List<SocialFeed> allFeeds = feedService.getAllFeeds();
+
+        List<FeedInfo> result = new ArrayList<>();
+        for (SocialFeed feed: allFeeds) {
+            UserInfo user = feedService.getUserInfo(feed.getUploaderId());
+            FeedInfo feedInfo = new FeedInfo(feed, user.getUsername());
+            result.add(feedInfo);
+        }
+
+        return result;
     }
 
     @GetMapping("/user/{userId}")

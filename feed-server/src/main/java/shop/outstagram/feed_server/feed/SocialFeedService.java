@@ -1,10 +1,7 @@
 package shop.outstagram.feed_server.feed;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatusCode;
-import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.client.RestClient;
@@ -15,6 +12,10 @@ import java.util.List;
 public class SocialFeedService {
 
     private SocialFeedRepository feedRepository;
+
+    @Value("${sns.user-server}")
+    private String userServerUrl;
+    private RestClient restClient = RestClient.create();
 
     public SocialFeedService(SocialFeedRepository feedRepository) {
         this.feedRepository = feedRepository;
@@ -40,6 +41,16 @@ public class SocialFeedService {
     public SocialFeed createFeed(FeedRequest feed) {
         SocialFeed savedFeed = feedRepository.save(new SocialFeed(feed));
         return savedFeed;
+    }
+
+    public UserInfo getUserInfo(int userId) {
+        return restClient.get()
+                .uri(userServerUrl + "/api/users/" + userId)
+                .retrieve()
+                .onStatus(HttpStatusCode::isError, (request, response) -> {
+                    throw new RuntimeException("invalid server response " + response.getStatusText());
+                })
+                .body(UserInfo.class);
     }
 
 }

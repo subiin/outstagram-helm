@@ -17,11 +17,12 @@ spec:
     spec:
       containers:
         - name: feed-container
-          # image: {{AWS_ACCOUNT_ID}}.dkr.ecr.{{AWS_REGION}}.amazonaws.com/{{ECR_FEED_SERVER_REPO}}:${IMAGE_TAG}
-          image: 975050179689.dkr.ecr.ap-northeast-2.amazonaws.com/outstagram-dev-feed-server:f_test2
+          image: {{AWS_ACCOUNT_ID}}.dkr.ecr.{{AWS_REGION}}.amazonaws.com/{{ECR_FEED_SERVER_REPO}}:${IMAGE_TAG}
           env:
             - name: SPRING_PROFILES_ACTIVE
               value: dev
+            - name: USER_SERVICE
+              value: http://user-service.sns.svc.cluster.local:8080
           envFrom:
             - configMapRef:
                 name: mysql-config
