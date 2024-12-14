@@ -1,7 +1,10 @@
 package shop.outstagram.feed_server.feed;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatusCode;
+import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.client.RestClient;
@@ -12,13 +15,17 @@ import java.util.List;
 public class SocialFeedService {
 
     private SocialFeedRepository feedRepository;
+    private KafkaTemplate<String, String> kafkaTemplate;
+    private ObjectMapper objectMapper;
 
     @Value("${sns.user-server}")
     private String userServerUrl;
     private RestClient restClient = RestClient.create();
 
-    public SocialFeedService(SocialFeedRepository feedRepository) {
+    public SocialFeedService(SocialFeedRepository feedRepository, KafkaTemplate<String, String> kafkaTemplate, ObjectMapper objectMapper) {
         this.feedRepository = feedRepository;
+        this.kafkaTemplate = kafkaTemplate;
+        this.objectMapper = objectMapper;
     }
 
     public List<SocialFeed> getAllFeeds() {
@@ -40,7 +47,29 @@ public class SocialFeedService {
     @Transactional
     public SocialFeed createFeed(FeedRequest feed) {
         SocialFeed savedFeed = feedRepository.save(new SocialFeed(feed));
+
+        UserInfo uploader = getUserInfo(savedFeed.getUploaderId());
+        FeedInfo feedInfo = new FeedInfo(savedFeed, uploader.getUsername());
+        try {
+            kafkaTemplate.send("feed.created", objectMapper.writeValueAsString(feedInfo));
+        } catch (JsonProcessingException e) {
+            throw new RuntimeException(e);
+        }
+
         return savedFeed;
+    }
+
+    public void refreshAllFeeds() {
+        List<SocialFeed> feeds = getAllFeeds();
+        for (SocialFeed feed: feeds) {
+            UserInfo uploader = getUserInfo(feed.getUploaderId());
+            FeedInfo feedInfo = new FeedInfo(feed, uploader.getUsername());
+            try {
+                kafkaTemplate.send("feed.created", objectMapper.writeValueAsString(feedInfo));
+            } catch (JsonProcessingException e) {
+                throw new RuntimeException(e);
+            }
+        }
     }
 
     public UserInfo getUserInfo(int userId) {
