@@ -1,11 +1,11 @@
-name: User CI
+name: Timeline CI
 
 on:
   push:
     paths:
-    - 'user-server/**'
+    - 'timeline-server/**'
     tags:
-    - 'u_*'
+    - 't_*'
       
 jobs:
   build-and-push:
@@ -14,25 +14,25 @@ jobs:
       id-token: write
       contents: read
 
+    strategy:
+      matrix:
+        redis-version: [6.2.4-v4, 6.2.6-v3]
+
     steps:
     - name: Checkout Repository
       uses: actions/checkout@v4
 
-    - name: Set up Docker
-      uses: docker/setup-buildx-action@v2
-
-    - name: Build and run MySQL container
-      working-directory: ./user-server
-      run: |
-        docker build -t custom-mysql .
-        docker run -d --name test-mysql -p 3306:3306 custom-mysql
-        docker ps    
-
     - name: Make application.yaml
       run: |
-        cd user-server
+        cd timeline-server
         touch ./src/main/resources/application.yaml
-        echo "${{ secrets.AWS_USER_PROPERTIES }}" > ./src/main/resources/application.yaml
+        echo "${{ secrets.AWS_TIMELINE_PROPERTIES }}" > ./src/main/resources/application.yaml
+
+    - name: Start Redis
+      uses: supercharge/redis-github-action@1.7.0
+      with:
+        redis-image: redis/redis-stack-server
+        redis-version: ${{ matrix.redis-version }}
 
     - name: Start Bitnami Kafka
       uses: bbcCorp/kafka-actions@v1
@@ -42,9 +42,8 @@ jobs:
       with:
         java-version: '21'
         distribution: 'temurin'
-
     - name: Grant execute permission for gradlew
-      run: chmod +x ./user-server/gradlew
+      run: chmod +x ./timeline-server/gradlew
 
     - name: Configure AWS credentials
       uses: aws-actions/configure-aws-credentials@v4
@@ -64,7 +63,12 @@ jobs:
     - name: Confirm Image Tag
       run: echo $IMAGE_TAG
 
+    - name: Build with Gradle
+      run: |
+        cd timeline-server
+        ./gradlew build
+
     - name: Build and Push Docker image with Jib
       run: |
-        cd user-server
-        ./gradlew jib --image=${{ steps.login-ecr.outputs.registry }}/${{ vars.ECR_USER_SERVER_REPO }}:${{ env.IMAGE_TAG }}
+        cd timeline-server
+        ./gradlew jib --image=${{ steps.login-ecr.outputs.registry }}/${{ vars.ECR_TIMELINE_SERVER_REPO }}:${{ env.IMAGE_TAG }}
