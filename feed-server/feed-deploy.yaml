@@ -17,7 +17,8 @@ spec:
     spec:
       containers:
         - name: feed-container
-          image: {{AWS_ACCOUNT_ID}}.dkr.ecr.{{AWS_REGION}}.amazonaws.com/{{ECR_FEED_SERVER_REPO}}:${IMAGE_TAG}
+          # image: {{AWS_ACCOUNT_ID}}.dkr.ecr.{{AWS_REGION}}.amazonaws.com/{{ECR_FEED_SERVER_REPO}}:${IMAGE_TAG}
+          image: 975050179689.dkr.ecr.ap-northeast-2.amazonaws.com/outstagram-dev-feed-server:f_0.0.4
           env:
             - name: SPRING_PROFILES_ACTIVE
               value: dev
