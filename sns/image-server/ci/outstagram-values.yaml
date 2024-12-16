@@ -1,6 +1,6 @@
 appName: image
 replicas: 1
-imageTag: i_0.0.1
+imageTag: i_0.0.2
 profile: dev
 envs:
   - name: IMAGE_PATH
