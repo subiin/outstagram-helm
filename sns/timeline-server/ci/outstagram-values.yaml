@@ -28,7 +28,11 @@ probe:
     periodSeconds: 1
     failureThreshold: 7
 persistence:
-  enabled: false
+  enabled: true
+  volume:
+    - name: logs
+      claimName: spring-app-logs
+      mountPath: /logs
 ingress:
   enabled: true
   hostname: outstagram.shop

@@ -4,16 +4,13 @@ imageTag: 1.0.0
 profile: dev
 envs: []
 configs: []
-resources:
-  memory:
-    requests: "256Mi"
-    limits: "500Mi"
-  cpu:
-    requests: "250m"
-    limits: "500m"
 probe: false
 persistence:
-  enabled: false
+  enabled: true
+  volume:
+    - name: logs
+      claimName: spring-app-logs
+      mountPath: /logs
 ingress:
   enabled: true
   hostname: outstagram.shop

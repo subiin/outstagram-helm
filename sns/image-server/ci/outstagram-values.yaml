@@ -29,7 +29,13 @@ probe:
     failureThreshold: 7
 persistence:
   enabled: true
-  mountPath: /images
+  volume:
+    - name: logs
+      claimName: spring-app-logs
+      mountPath: /logs
+    - name: images
+      claimName: image-volume-claim
+      mountPath: /images
 ingress:
   enabled: true
   hostname: outstagram.shop
