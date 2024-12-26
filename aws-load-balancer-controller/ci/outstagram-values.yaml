@@ -2,5 +2,5 @@ serviceAccount:
   create: true
   name: aws-load-balancer-controller
   annotations:
-    eks.amazonaws.com/role-arn: ${AWS_ROLE_ARN}
+    eks.amazonaws.com/role-arn: arn:aws:iam::${AWS_ACCOUNT_ID}:role/outstagram-dev-lb-controller-role
 clusterName: outstagram-dev-cluster
