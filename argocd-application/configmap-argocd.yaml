@@ -5,7 +5,7 @@ metadata:
   namespace: argocd
 spec:
   destination:
-    name: arn:aws:eks:ap-northeast-2:975050179689:cluster/outstagram-dev-cluster
+    name: arn:aws:eks:ap-northeast-2:${AWS_ACCOUNT_ID}:cluster/outstagram-dev-cluster
     namespace: sns
   project: default
   source:
