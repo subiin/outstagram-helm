@@ -1,0 +1,47 @@
+alertmanager:
+  enabled: true
+
+grafana:
+  enabled: true
+  defaultDashboardsTimezone: Asia/Seoul
+  deploymentStrategy:
+    type: Recreate
+  ingress:
+    enabled: true
+    ingressClassName: alb
+    annotations:
+      alb.ingress.kubernetes.io/scheme: internet-facing
+      alb.ingress.kubernetes.io/target-type: ip
+      alb.ingress.kubernetes.io/group.name: outstagram
+      alb.ingress.kubernetes.io/listen-ports: '[{"HTTPS":443}, {"HTTP":80}]'
+      alb.ingress.kubernetes.io/ssl-redirect: "443"
+      alb.ingress.kubernetes.io/success-codes: 200-302
+      alb.ingress.kubernetes.io/certificate-arn: ${CERTIFICATE_ARN}
+      external-dns.alpha.kubernetes.io/hostname: grafana.outstagram.shop
+    hosts:
+    - grafana.outstagram.shop
+    paths:
+    - /*
+  persistence:
+    type: pvc
+    enabled: true
+    accessModes:
+    - ReadWriteOnce
+    size: 5Gi
+    finalizers:
+    - kubernetes.io/pvc-protection
+
+prometheus:
+  prometheusSpec:
+    serviceMonitorSelectorNilUsesHelmValues: false
+    retention: 5d
+    retentionSize: 10GiB
+    storageSpec:
+      volumeClaimTemplate:
+        spec:
+          storageClassName: ebs-sc
+          accessModes: 
+            - "ReadWriteOnce"
+          resources:
+            requests:
+              storage: 10Gi

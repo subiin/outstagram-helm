@@ -2,5 +2,5 @@ apiVersion: v2
 name: outstagram-chart
 description: A Helm chart for Outstagram
 type: application
-version: 0.1.2
+version: 0.1.3
 

@@ -1,0 +1,29 @@
+loadtest:
+  name: example
+  locust_locustfile: main.py
+  locust_locustfile_path: "/mnt/locust"
+  locust_locustfile_configmap: "locust-locustfile"
+  locust_host: https://outstagram.shop
+
+master:
+  replicas: 1
+  resources:
+    requests:
+      cpu: 500m
+      memory: 512Mi
+    limits:
+      cpu: 1000m
+      memory: 1024Mi
+
+worker:
+  replicas: 2
+  resources:
+    requests:
+      cpu: 250m
+      memory: 256Mi
+    limits:
+      cpu: 500m
+      memory: 256Mi
+
+service:
+  type: ClusterIP
